@@ -1,0 +1,35 @@
+module top_module( 
+    input [399:0] a, b,
+    input cin,
+    output cout,
+    output [399:0] sum );
+
+    wire [99:0] c_out;
+
+    // Instantiate the first BCD full adder
+    bcd_fadd bcd_fadd_0 (
+        .a (a[3:0]),
+        .b (b[3:0]),
+        .cin (cin),
+        .cout (c_out[0]),
+        .sum (sum[3:0])
+    );
+
+    // Generate loop to instantiate the remaining 99 BCD full adders
+    genvar i;
+    generate
+        for (i = 1; i < 100; i = i + 1) begin : bcd_add_loop
+            bcd_fadd bcd_fadd_inst (
+                .a (a[i*4 + 3 : i*4]),
+                .b (b[i*4 + 3 : i*4]),
+                .cin (c_out[i-1]),
+                .cout (c_out[i]),
+                .sum (sum[i*4 + 3 : i*4])
+            );
+        end
+    endgenerate
+
+    // Assign the final carry-out
+    assign cout = c_out[99];
+
+endmodule
