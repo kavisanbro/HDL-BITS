@@ -1,0 +1,38 @@
+module top_module (
+    input [31:0] a,
+    input [31:0] b,
+    input sub,
+    output [31:0] sum
+);
+    wire [15:0] sum_lo, sum_hi;
+    wire cout_lo;
+    wire [15:0] b_lo_xor, b_hi_xor;
+    
+    // XOR b with sub for subtraction
+    assign b_lo_xor = b[15:0] ^ {16{sub}};
+    assign b_hi_xor = b[31:16] ^ {16{sub}};
+    
+    // Lower 16 bits
+    add16 u0 (
+        .a(a[15:0]),
+        .b(b_lo_xor),
+        .cin(sub),
+        .sum(sum_lo),
+        .cout(cout_lo)
+    );
+    
+    // Higher 16 bits
+    add16 u1 (
+        .a(a[31:16]),
+        .b(b_hi_xor),
+        .cin(cout_lo),
+        .sum(sum_hi),
+        .cout()
+    );
+    
+    assign sum = {sum_hi, sum_lo};
+endmodule
+
+
+   
+   
