@@ -1,0 +1,13 @@
+module top_module (
+    input clk,
+    input j,
+    input k,
+    output Q
+);
+    wire d;
+    wire Qold;
+assign d = j & ~Qold | ~k & Qold;
+always @(posedge clk)
+        Qold <= d;
+    assign Q = Qold;
+endmodule

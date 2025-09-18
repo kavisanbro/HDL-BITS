@@ -1,0 +1,22 @@
+module top_module (
+    input clk,
+    input d,
+    output q
+);
+
+    reg q_pos, q_neg;
+
+    // Capture data on rising edge
+    always @(posedge clk) begin
+        q_pos <= d;
+    end
+
+    // Capture data on falling edge
+    always @(negedge clk) begin
+        q_neg <= d;
+    end
+
+    // Mux output depending on clock level
+    assign q = clk ? q_pos : q_neg;
+
+endmodule
